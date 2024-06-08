@@ -1,18 +1,21 @@
 import React, { useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { useMutation } from '@tanstack/react-query';
+import { useNavigate } from 'react-router-dom';
 import { login as loginApi } from '../api/auth';
 import { setToken } from '../store/slices/authSlice';
 
 const Login: React.FC = () => {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
 
   const mutation = useMutation({
     mutationFn: ({ username, password }: { username: string; password: string }) => loginApi(username, password),
     onSuccess: (data) => {
-      dispatch(setToken(data.token));
+      dispatch(setToken(data.response)); // Assuming data.response contains the token
+      navigate('/dashboard');
     },
   });
 
